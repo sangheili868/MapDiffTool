@@ -130,3 +130,112 @@ void setLabel(int rowIndex, int colIndex, string myTile)
 		changedtiles.insert(make_pair(rowIndex, newmap));
 	}
 }
+
+void writeScenarioMap(string filename, string mapFile) {
+	string input;
+	stringstream myfile;
+
+	myfile << "current_time=0" << endl;
+	myfile << "description=""" << endl;
+	myfile << "experience_modifier=70" << endl;
+	myfile << "id=" << filename << endl;
+	myfile << "mapdata=\"";
+	 
+	ifstream inFile;
+	inFile.open(mapFile);
+
+	while (!inFile.eof()) {
+		cout << input;
+	}
+	inFile.close();
+
+	myfile << endl << "\"" << endl;
+	myfile << "name=\"" << fileName << "\"";
+	myfile << "random_starting_time = no" << endl;
+	myfile << "turns=-1" << endl;
+	myfile << "victory_when_enemies_defeated=yes" << endl;
+	myfile << "\[time\]\
+		blue = 0\
+		green = -20\
+		id = \"dawn\"\
+		image = \"misc/time-schedules/default/schedule-dawn.png\"\
+		lawful_bonus = 0\
+		mask = \"\"\
+		#textdomain wesnoth - help\
+		name = _\"Dawn\"\
+		red = -20\
+		sound = \"ambient/morning.ogg\"\
+		[\/ time]\
+	[time]\
+	blue = 0\
+		green = 0\
+		id = \"morning\"\
+		image = \"misc/time-schedules/default/schedule-morning.png\"\
+		lawful_bonus = 25\
+		mask = \"\"\
+		name = _\"Morning\"\
+		red = 0\
+		sound = \"\"\
+		[/ time]\
+	[time]\
+	blue = 0\
+		green = 0\
+		id = \"afternoon\"\
+		image = \"misc/time-schedules/default/schedule-afternoon.png\"\
+		lawful_bonus = 25\
+		mask = \"\"\
+		name = _\"Afternoon\"\
+		red = 0\
+		sound = \"\"\
+		[/ time]\
+	[time]\
+	blue = -20\
+		green = -20\
+		id = \"dusk\"\
+		image = \"misc/time-schedules/default/schedule-dusk.png\"\
+		lawful_bonus = 0\
+		mask = \"\"\
+		name = _\"Dusk\"\
+		red = 0\
+		sound = \"ambient/night.ogg\"\
+		[/ time]\
+	[time]\
+	blue = -10\
+		green = -35\
+		id = \"first_watch\"\
+		image = \"misc/time-schedules/default/schedule-firstwatch.png\"\
+		lawful_bonus = -25\
+		mask = \"\"\
+		name = _\"First Watch\"\
+		red = -45\
+		sound = \"\"\
+		[/ time]\
+	[time]\
+	blue = -10\
+		green = -35\
+		id = \"second_watch\"\
+		image = \"misc/time-schedules/default/schedule-secondwatch.png\"\
+		lawful_bonus = -25\
+		mask = \"\"\
+		name = _\"Second Watch\"\
+		red = -45\
+		sound = \"\"\
+		[/ time]\
+		" << endl;
+
+	for (auto iter = changedtiles.begin(); iter != changedtiles.end(); ++iter) {
+		for (auto iter2 = changedtiles.at(iter->first).begin(); iter2 != changedtiles.at(iter->first).end(); ++iter2) {
+			myfile << "[label]" << endl;
+			myfile << "/tcolor=\"221, 221, 221,0\"" << endl;
+			myfile << "/timmutable=yes" << endl;
+			myfile << "/tteam_name=\"\"" << endl;
+			myfile << "/ttext=\"" << (iter2->second) << "\"" << endl;
+			myfile << "/tvisible_in_fog=yes" << endl;
+			myfile << "/tvisible_in_shroud=no" << endl;
+			myfile << "/tx=" << (iter->first) << endl;
+			myfile << "/ty=" << (iter2->first) << endl;
+			myfile << "[/label]" << endl;
+		}
+	}
+
+}

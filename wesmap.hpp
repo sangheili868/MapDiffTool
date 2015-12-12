@@ -44,6 +44,7 @@ public:
 	void resize(int, int, westile);	//if size increases, fill with empty
 	void writeMap(const string filename);
 	void setLabel(int rowIndex, int colIndex, westile string);
+	void writeScenarioMap(string filename, string mapFile);
 
 	westile getTile(int rowIndex, int colIndex) const {
 		//cout << rowIndex << " " << colIndex << endl;
@@ -67,5 +68,6 @@ private:
 	int numCols;
 	string filename;
 };
+
 
 #endif
