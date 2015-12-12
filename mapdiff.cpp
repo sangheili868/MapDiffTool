@@ -34,9 +34,11 @@ bool mapdiffer(string argument)
 		mapB.resize(mapB.getNumRows(), numCols, voidTile);
 	}
 
+	/* Old output map
 	wesmap O(numRows, numCols, voidTile);
 	O.setBorderSize(1);
 	O.setUsage("map");  //OutputMap is filler
+	*/
 
 	/*
 	cout << mapA.getNumRows() << " " << mapA.getNumCols() << endl;
@@ -49,11 +51,13 @@ bool mapdiffer(string argument)
 		for (int colIndex = 0; colIndex < numCols; colIndex++) {
 			//cout << mapA.getTile(rowIndex, colIndex).bgCode << " " << mapB.getTile(rowIndex, colIndex).bgCode << endl;
 			if (mapA.getTile(rowIndex, colIndex) == mapB.getTile(rowIndex, colIndex)){
-				O.setTile(rowIndex, colIndex, voidTile);
+				//O.setTile(rowIndex, colIndex, voidTile);
+				
 			}
 			else {
 				//cout << "Difference Found" << endl;
-				O.setTile(rowIndex, colIndex, mapB.getTile(rowIndex, colIndex));
+				//O.setTile(rowIndex, colIndex, mapB.getTile(rowIndex, colIndex));
+				mapB.setLabel(rowIndex, colIndex, mapB.getTile(rowIndex, colIndex));
 			}
 		}
 	}

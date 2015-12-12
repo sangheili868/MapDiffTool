@@ -3,12 +3,14 @@
 
 #include <string>
 #include <vector>
+#include <unorderd_map>
 
 using namespace std;
 
 struct westile {
 	string bgCode;
 	string fgCode;
+	string name;
 	westile(string input) {
 		for (int i = 0; i < input.size(); i++) {
 			if (input.at(i) == '^'){
@@ -23,8 +25,7 @@ struct westile {
 		if (bgCode.size() > 4 || fgCode.size() > 4) {
 			cout << "Error: Corrupt map file: " << bgCode << "^" << fgCode << endl;
 		}
-
-
+		name = input;
 	}
 	bool operator==(const westile &myWestile) const {
 		if (bgCode == myWestile.bgCode && fgCode == myWestile.fgCode) {
@@ -42,6 +43,7 @@ public:
 	wesmap(int, int, westile);   // empty map constructor
 	void resize(int, int, westile);	//if size increases, fill with empty
 	void writeMap(const string filename);
+	void setLabel(int rowIndex, int colIndex, westile string);
 
 	westile getTile(int rowIndex, int colIndex) const {
 		//cout << rowIndex << " " << colIndex << endl;
@@ -58,10 +60,12 @@ public:
 
 private:
 	vector< vector<westile> > tiles;
+	unordered_map<int, unorderd_map<int, string> > changedtiles;
 	int borderSize;
 	string usage;
 	int numRows;
 	int numCols;
+	string filename;
 };
 
 #endif

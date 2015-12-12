@@ -116,3 +116,17 @@ void wesmap::writeMap(string filename) {
 	}
 	filesystem::write_file(filename, myfile.str());
 }
+
+void setLabel(int rowIndex, int colIndex, string myTile)
+{
+	if (changedtiles.count(rowindex))
+	{
+		// Row already has a map
+		changedtiles[rowIndex].insert(make_pair(colIndex, myTile.name()));
+	} else {
+		// map for the row does not exists, so make it
+		unordered_map<int, westile> newmap;
+		newmap.insert(make_pair(colIndex, myTile.name()));
+		changedtiles.insert(make_pair(rowIndex, newmap));
+	}
+}
