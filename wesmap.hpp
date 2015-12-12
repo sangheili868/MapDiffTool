@@ -42,6 +42,7 @@ public:
 	wesmap(const string & filename);  //map file constuctor
 	wesmap(int, int, westile);   // empty map constructor
 	void resize(int, int, westile);	//if size increases, fill with empty
+	void resizeNew(int, int, int, int, westile);
 	void writeMap(const string filename);
 	void setLabel(int rowIndex, int colIndex, westile string);
 	void writeScenarioMap(string filename, string mapFile);
