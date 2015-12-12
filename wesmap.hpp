@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <unorderd_map>
+#include <unordered_map>
 
 using namespace std;
 
@@ -62,7 +62,7 @@ public:
 
 private:
 	vector< vector<westile> > tiles;
-	unordered_map<int, unorderd_map<int, string> > changedtiles;
+	unordered_map<int, unordered_map<int, string> > changedtiles;
 	int borderSize;
 	string usage;
 	int numRows;

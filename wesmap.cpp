@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-#include "filesystem.hpp"
+//#include "filesystem.hpp"
 #include "wesmap.hpp"
 
 //http://wiki.wesnoth.org/TerrainCodesWML

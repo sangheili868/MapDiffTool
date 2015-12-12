@@ -12,7 +12,7 @@ using namespace std;
 int main(int argc, char* argv[])//mapdiffer(string argument)
 {
 	string firstmap, secondmap, filename;
-	parseCommas(argument, firstmap, secondmap, filename);
+	//parseCommas(argument, firstmap, secondmap, filename);
 	wesmap mapA(firstmap);
 	wesmap mapB(secondmap);
 
@@ -20,6 +20,9 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 	int numCols = max(mapA.getNumCols(), mapB.getNumCols());
 	westile voidTile("Xv");
 
+	mapA.resizeNew(1, -1, numRows, numCols, voidTile);
+
+	/*
 	if (mapA.getNumRows() != numRows) {
 		mapA.resize(numRows, mapA.getNumCols(), voidTile);
 	}
@@ -32,7 +35,7 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 	}
 	if (mapB.getNumCols() != numCols) {
 		mapB.resize(mapB.getNumRows(), numCols, voidTile);
-	}
+	}*/
 
 	/* Old output map
 	wesmap O(numRows, numCols, voidTile);
