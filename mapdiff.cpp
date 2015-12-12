@@ -11,8 +11,18 @@ using namespace std;
 
 int main(int argc, char* argv[])//mapdiffer(string argument)
 {
+	/*
 	string firstmap, secondmap, filename;
 	parseCommas(argument, firstmap, secondmap, filename);
+	*/
+
+	if (argc != 4) {
+		cout << "Usage: mapdiff 'first map path' 'second map path' 'output file name'" << endl;
+	}
+
+	string firstmap(argv[1]);
+	string secondmap(argv[2]);
+	string filename(argv[3]);
 	wesmap mapA(firstmap);
 	wesmap mapB(secondmap);
 
@@ -57,7 +67,7 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 			else {
 				//cout << "Difference Found" << endl;
 				//O.setTile(rowIndex, colIndex, mapB.getTile(rowIndex, colIndex));
-				mapB.setLabel(rowIndex, colIndex, mapB.getTile(rowIndex, colIndex));
+				mapB.setLabel(rowIndex, colIndex, mapB.getTile(rowIndex, colIndex).name);
 			}
 		}
 	}

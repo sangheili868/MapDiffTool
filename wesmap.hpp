@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <unorderd_map>
+#include <unordered_map>
 
 using namespace std;
 
@@ -43,7 +43,7 @@ public:
 	wesmap(int, int, westile);   // empty map constructor
 	void resize(int, int, westile);	//if size increases, fill with empty
 	void writeMap(const string filename);
-	void setLabel(int rowIndex, int colIndex, westile string);
+	void setLabel(int rowIndex, int colIndex, string myTile);
 	void writeScenarioMap(string filename, string mapFile);
 
 	westile getTile(int rowIndex, int colIndex) const {
@@ -61,7 +61,7 @@ public:
 
 private:
 	vector< vector<westile> > tiles;
-	unordered_map<int, unorderd_map<int, string> > changedtiles;
+	unordered_map<int, unordered_map<int, string> > changedtiles;
 	int borderSize;
 	string usage;
 	int numRows;

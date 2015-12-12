@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
-#include "filesystem.hpp"
+#include <fstream>
+#include <unordered_map>
 #include "wesmap.hpp"
 
 //http://wiki.wesnoth.org/TerrainCodesWML
@@ -9,8 +10,9 @@
 wesmap::wesmap(const string & filename)
 {
 	//File Constructor
-	string config = filesystem::read_file(filename);
-	stringstream infile(config);
+	string config;
+	ifstream infile;
+	infile.open(filename);
 	/*
 	if (!infile.is_open()) {
 		cout << "Invalid filename: " << filename << " does not exist." << endl;
@@ -97,7 +99,7 @@ void wesmap::resize(int newNumRows, int newNumCols, westile newtile) {
 }
 
 void wesmap::writeMap(string filename) {
-	stringstream myfile;
+	ofstream myfile;
 	myfile << "border_size=" << borderSize << endl;
 	myfile << "usage=" << usage << endl << endl;
 
@@ -114,24 +116,24 @@ void wesmap::writeMap(string filename) {
 		}
 		myfile << endl;
 	}
-	filesystem::write_file(filename, myfile.str());
+	myfile.close();
 }
 
-void setLabel(int rowIndex, int colIndex, string myTile)
+void wesmap::setLabel(int rowIndex, int colIndex, string myTile)
 {
-	if (changedtiles.count(rowindex))
+	if (changedtiles.count(rowIndex))
 	{
 		// Row already has a map
-		changedtiles[rowIndex].insert(make_pair(colIndex, myTile.name()));
+		changedtiles[rowIndex].insert(make_pair(colIndex, myTile));
 	} else {
 		// map for the row does not exists, so make it
-		unordered_map<int, westile> newmap;
-		newmap.insert(make_pair(colIndex, myTile.name()));
+		unordered_map<int, string> newmap;
+		newmap.insert(make_pair(colIndex, myTile));
 		changedtiles.insert(make_pair(rowIndex, newmap));
 	}
 }
 
-void writeScenarioMap(string filename, string mapFile) {
+void wesmap::writeScenarioMap(string filename, string mapFile) {
 	string input;
 	stringstream myfile;
 
@@ -150,7 +152,7 @@ void writeScenarioMap(string filename, string mapFile) {
 	inFile.close();
 
 	myfile << endl << "\"" << endl;
-	myfile << "name=\"" << fileName << "\"";
+	myfile << "name=\"" << filename << "\"";
 	myfile << "random_starting_time = no" << endl;
 	myfile << "turns=-1" << endl;
 	myfile << "victory_when_enemies_defeated=yes" << endl;
