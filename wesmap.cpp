@@ -2,6 +2,7 @@
 #include <sstream>
 #include <fstream>
 #include <unordered_map>
+//#include "filesystem.hpp"
 #include "wesmap.hpp"
 
 //http://wiki.wesnoth.org/TerrainCodesWML
@@ -97,7 +98,64 @@ void wesmap::resize(int newNumRows, int newNumCols, westile newtile) {
 		numCols = newNumCols;
 	}
 }
+/*
+void wesmap::resizeNew(int moveRows, int moveCols, int newNumRows, int newNomCols, westile newtile) {
+	if (newNumRows > numRows)
+	{
+		vector<westile> tempvec;
 
+		if (moveRows >= 0){
+			for (int i = 0; i < moveRows; i++){
+				tempvec.push_back(newtile);
+			}
+
+			if (moveCols >= 0){
+				for (int k = 0; k < moveCols; k++){
+					tiles.push_back(tempvec);
+				}
+			}
+			else{
+				for (int k = 0; k > moveCols; k--){
+					tiles.push_front(tempvec);
+				}
+			}
+		}
+
+		else{
+			for (int i = 0; i > moveRows; i--){
+				tempvec.push_front(newtile);
+			}
+
+			if (moveCols >= 0){
+				for (int k = 0; k < moveCols; k++){
+					tiles.push_back(tempvec);
+				}
+			}
+			else{
+				for (int k = 0; k > moveCols; k--){
+					tiles.push_front(tempvec);
+				}
+			}
+		}
+
+		for (int j = 0; j < numCols; j++){
+			tempvec.push_back(newtile);
+		}
+		
+		for (int l = numRows; l < newNumRows; l++){
+			tiles.push_back(tempvec);
+		}
+		numRows = newNumRows;
+	}
+	/*if (newNumCols > numCols)
+	{
+		for (int i = 0; i<numRows; i++)
+			for (int j = numCols; j<newNumCols; j++)
+				tiles[i].push_back(newtile);
+		numCols = newNumCols;
+	}
+}
+*/
 void wesmap::writeMap(string filename) {
 	ofstream myfile;
 	myfile << "border_size=" << borderSize << endl;
