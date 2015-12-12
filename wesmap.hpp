@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <deque>
 #include <unordered_map>
 
 using namespace std;
@@ -61,7 +62,7 @@ public:
 	void setUsage(const string & n) { usage = n; }
 
 private:
-	vector< vector<westile> > tiles;
+	deque< deque<westile> > tiles;
 	unordered_map<int, unordered_map<int, string> > changedtiles;
 	int borderSize;
 	string usage;

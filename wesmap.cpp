@@ -36,7 +36,7 @@ wesmap::wesmap(const string & filename)
 	}
 	string input = config;
 	string inputLine;
-	vector<westile> tileRow;
+	deque<westile> tileRow;
 	numRows = 0;
 	getline(infile, inputLine);
 	getline(infile, inputLine);
@@ -67,7 +67,7 @@ wesmap::wesmap(const string & filename)
 
 wesmap::wesmap(int rowNum, int colNum, westile myTile)
 {
-	vector<westile> temp;
+	deque<westile> temp;
 	numRows = rowNum;
 	numCols = colNum;
 	for (int i = 0; i < colNum; i++) {
@@ -83,7 +83,7 @@ void wesmap::resize(int newNumRows, int newNumCols, westile newtile) {
 
 	if (newNumRows > numRows)
 	{
-		vector<westile> tempvec;
+		deque<westile> tempvec;
 		for (int i = 0; i<numCols; i++)
 			tempvec.push_back(newtile);
 		for (int j = numRows; j<newNumRows; j++)
@@ -98,11 +98,11 @@ void wesmap::resize(int newNumRows, int newNumCols, westile newtile) {
 		numCols = newNumCols;
 	}
 }
-/*
+
 void wesmap::resizeNew(int moveRows, int moveCols, int newNumRows, int newNomCols, westile newtile) {
 	if (newNumRows > numRows)
 	{
-		vector<westile> tempvec;
+		deque<westile> tempvec;
 
 		if (moveRows >= 0){
 			for (int i = 0; i < moveRows; i++){
@@ -153,9 +153,9 @@ void wesmap::resizeNew(int moveRows, int moveCols, int newNumRows, int newNomCol
 			for (int j = numCols; j<newNumCols; j++)
 				tiles[i].push_back(newtile);
 		numCols = newNumCols;
-	}
+	}*/
 }
-*/
+
 void wesmap::writeMap(string filename) {
 	ofstream myfile;
 	myfile << "border_size=" << borderSize << endl;
