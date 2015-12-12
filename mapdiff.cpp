@@ -62,7 +62,7 @@ bool mapdiffer(string argument)
 		}
 	}
 
-	O.writeMap(filename); //mapName is filler
+	mapB.writeScenarioMap(filename,secondmap); //mapName is filler
 	return true;
 }
 
