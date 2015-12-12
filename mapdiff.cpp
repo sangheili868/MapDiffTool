@@ -9,7 +9,7 @@
 
 using namespace std;
 
-bool mapdiffer(string argument)
+int main(int argc, char* argv[])//mapdiffer(string argument)
 {
 	string firstmap, secondmap, filename;
 	parseCommas(argument, firstmap, secondmap, filename);
