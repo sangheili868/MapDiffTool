@@ -18,6 +18,7 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 
 	if (argc != 4) {
 		cout << "Usage: mapdiff 'first map path' 'second map path' 'output file name'" << endl;
+		return 0;
 	}
 
 	string firstmap(argv[1]);
@@ -77,7 +78,7 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 	}
 
 	mapB.writeScenarioMap(filename,secondmap); //mapName is filler
-	return true;
+	return 0;
 }
 
 void parseCommas(std::string input, std::string & originalMap,
