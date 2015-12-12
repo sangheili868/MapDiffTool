@@ -1,0 +1,2 @@
+# MapDiffTool
+For Wesnoth
