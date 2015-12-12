@@ -193,7 +193,8 @@ void wesmap::setLabel(int rowIndex, int colIndex, string myTile)
 
 void wesmap::writeScenarioMap(string filename, string mapFile) {
 	string input;
-	stringstream myfile;
+	ofstream myfile;
+	myfile.open(filename);
 
 	myfile << "current_time=0" << endl;
 	myfile << "description=""" << endl;
@@ -203,10 +204,12 @@ void wesmap::writeScenarioMap(string filename, string mapFile) {
 	 
 	ifstream inFile;
 	inFile.open(mapFile);
-
+	cout << "reading" << endl;
 	while (!inFile.eof()) {
-		cout << input;
+		inFile >> input;
 	}
+	myfile << input;
+	cout << "done" << endl;
 	inFile.close();
 
 	myfile << endl << "\"" << endl;
@@ -283,6 +286,7 @@ void wesmap::writeScenarioMap(string filename, string mapFile) {
 		[/ time]\
 		" << endl;
 
+	cout << "writing labels" << endl;
 	for (auto iter = changedtiles.begin(); iter != changedtiles.end(); ++iter) {
 		for (auto iter2 = changedtiles.at(iter->first).begin(); iter2 != changedtiles.at(iter->first).end(); ++iter2) {
 			myfile << "[label]" << endl;
@@ -297,5 +301,7 @@ void wesmap::writeScenarioMap(string filename, string mapFile) {
 			myfile << "[/label]" << endl;
 		}
 	}
+	cout << "reading" << endl;
+	myfile.close();
 
 }
