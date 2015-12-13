@@ -102,7 +102,7 @@ void parseCommas(std::string input, std::string & originalMap,
 //All three maps MUST be the same size.
 //returns number of differences.
 //writes to output map.
-int mapDiff(const wesmap & mapA, const wesmap & mapB, wesmap & mapOutput)
+int mapDiff_func(const wesmap & mapA, const wesmap & mapB, wesmap & mapOutput)
 {
 	westile voidTile("Xv");
 	int numDiffs = 0;
@@ -135,7 +135,7 @@ void getDiff(const wesmap & mapA, const wesmap & mapB, wesmap & mapOutput)
 	int toCompare = 0;
 	int rowsA, rowsB, colsA, colsB;
 	rowsA = mapA.getNumRows(); rowsB = mapB.getNumRows();
-	colsA = mapA.getNumCols(); rowsB = mapB.getNumCols();
+	colsA = mapA.getNumCols(); colsB = mapB.getNumCols();
 
 	if (rowsA != rowsB)
 	{
@@ -188,7 +188,7 @@ void getDiff(const wesmap & mapA, const wesmap & mapB, wesmap & mapOutput)
 			}
 		}
 	}
-	mapDiff(mapA, mapB, mapOutput);
+	mapDiff_func(mapA, mapB, mapOutput);
 }
 
 void getDiff_helper_cols(const wesmap &mapA, const wesmap & mapB, wesmap mapOutput, int rowPassed, int * bestPosition)
@@ -199,7 +199,7 @@ void getDiff_helper_cols(const wesmap &mapA, const wesmap & mapB, wesmap mapOutp
 	int toCompare = 0;
 	int rowsA, rowsB, colsA, colsB;
 	rowsA = mapA.getNumRows(); rowsB = mapB.getNumRows();
-	colsA = mapA.getNumCols(); rowsB = mapB.getNumCols();
+	colsA = mapA.getNumCols(); colsB = mapB.getNumCols();
 
 	if (rowsA != colsB)
 	{
@@ -209,7 +209,7 @@ void getDiff_helper_cols(const wesmap &mapA, const wesmap & mapB, wesmap mapOutp
 			{
 				tempA = mapA;
 				tempA.resizeNew(rowPassed, colNow, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
-				toCompare = mapDiff(tempA, tempB, mapOutput);
+				toCompare = mapDiff_func(tempA, tempB, mapOutput);
 				if (toCompare < bestPosition[0])
 				{
 					bestPosition[0] = toCompare;
@@ -224,7 +224,7 @@ void getDiff_helper_cols(const wesmap &mapA, const wesmap & mapB, wesmap mapOutp
 			{
 				tempB = mapB;
 				tempB.resizeNew(rowPassed, colNow, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
-				toCompare = mapDiff(tempA, tempB, mapOutput);
+				toCompare = mapDiff_func(tempA, tempB, mapOutput);
 				if (toCompare < bestPosition[0])
 				{
 					bestPosition[0] = toCompare;
@@ -239,9 +239,11 @@ void getDiff_helper_cols(const wesmap &mapA, const wesmap & mapB, wesmap mapOutp
 int newDiff(const wesmap & mapA, int rowOffA, int colOffA, const wesmap mapB, int rowOffB, int colOffB)
 {
 	int numDiffs = 0;
-	for (int rowA = rowOffA, int rowB = rowOffB; rowA < mapA.getNumRows(), rowB < mapB.getNumRows(); rowA++, rowB++)
+	int rowB = rowOffB;
+	for (int rowA = rowOffA; (rowA < mapA.getNumRows()) && (rowB < mapB.getNumRows()); rowA++, rowB++)
 	{
-		for (int colA = colOffA, int colB = colOffB; colA < mapA.getNumCols(), colB < mapB.getNumCols(); colA++, colB++)
+		int colB = colOffB;
+		for (int colA = colOffA; (colA < mapA.getNumCols()) && (colB < mapB.getNumCols()); colA++, colB++)
 		{
 			if (mapA.getTile(rowA, colA) == mapB.getTile(rowB, colB))
 			{
