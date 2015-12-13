@@ -61,11 +61,15 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 	cout << O.getNumRows() << " " << O.getNumCols() << endl;
 	cout << "max" << numRows << " " << numCols << endl;
 	*/
+	mapB.resizeNew(0, 3, numRows, numCols, voidTile);
+	mapA.resizeNew(0, 0, numRows, numCols, voidTile);
 
 	for (int rowIndex = 0; rowIndex < numRows; rowIndex++) {
 		for (int colIndex = 0; colIndex < numCols; colIndex++) {
 			//cout << mapA.getTile(rowIndex, colIndex).bgCode << " " << mapB.getTile(rowIndex, colIndex).bgCode << endl;
+			cout << "I am before getTile" << endl;
 			if (mapA.getTile(rowIndex, colIndex) == mapB.getTile(rowIndex, colIndex)){
+				cout << "I am in getTile" << endl;
 				//O.setTile(rowIndex, colIndex, voidTile);
 				
 			}
@@ -78,6 +82,7 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 	}
 
 	mapB.writeScenarioMap(filename,secondmap); //mapName is filler
+	//mapB.writeMap(filename);
 	return 0;
 }
 

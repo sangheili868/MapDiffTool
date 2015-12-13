@@ -99,7 +99,7 @@ void wesmap::resize(int newNumRows, int newNumCols, westile newtile) {
 	}
 }
 
-void wesmap::resizeNew(int moveRows, int moveCols, int newNumRows, int newNomCols, westile newtile) {
+void wesmap::resizeNew(int moveRows, int moveCols, int newNumRows, int newNumCols, westile newtile) {
 	if (newNumRows > numRows)
 	{
 		deque<westile> tempvec;
@@ -147,13 +147,13 @@ void wesmap::resizeNew(int moveRows, int moveCols, int newNumRows, int newNomCol
 		}
 		numRows = newNumRows;
 	}
-	/*if (newNumCols > numCols)
+	if (newNumCols > numCols)
 	{
 		for (int i = 0; i<numRows; i++)
 			for (int j = numCols; j<newNumCols; j++)
 				tiles[i].push_back(newtile);
 		numCols = newNumCols;
-	}*/
+	}
 }
 
 void wesmap::writeMap(string filename) {
