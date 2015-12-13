@@ -49,11 +49,11 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 		mapB.resize(mapB.getNumRows(), numCols, voidTile);
 	}*/
 
-	/* Old output map
+	// Old output map
 	wesmap O(numRows, numCols, voidTile);
 	O.setBorderSize(1);
 	O.setUsage("map");  //OutputMap is filler
-	*/
+	
 
 	/*
 	cout << mapA.getNumRows() << " " << mapA.getNumCols() << endl;
@@ -62,8 +62,42 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 	cout << "max" << numRows << " " << numCols << endl;
 	*/
 	//mapB.resizeNew(5, 2, numRows, numCols, voidTile);
-	mapA.resizeNew(8, 3, numRows, numCols, voidTile);
+	//mapA.resizeNew(8, 3, numRows, numCols, voidTile);
+	
+	getDiff_optimized(mapA, mapB, O);
 
+	mapA.setBorderSize(1);
+	mapA.setUsage("map");  //OutputMap is filler
+	mapA.writeMap("mapA.map");
+	
+	
+	mapB.setBorderSize(1);
+	mapB.setUsage("map");  //OutputMap is filler
+	mapB.writeMap("mapB.map");
+	
+
+//JACOB INSERTED
+	{
+		//westile voidTile("Xv");
+		//int numDiffs = 0;
+		for (int rowIndex = 0; rowIndex < mapA.getNumRows(); rowIndex++) {
+			for (int colIndex = 0; colIndex < mapA.getNumCols(); colIndex++) {
+				//cout << mapA.getTile(rowIndex, colIndex).bgCode << " " << mapB.getTile(rowIndex, colIndex).bgCode << endl;
+				if (mapA.getTile(rowIndex, colIndex) == mapB.getTile(rowIndex, colIndex)){
+					//mapOutput.setTile(rowIndex, colIndex, voidTile);
+				}
+				else {
+					//cout << "Difference Found" << endl;
+					//mapOutput.setTile(rowIndex, colIndex, mapB.getTile(rowIndex, colIndex));
+					//numDiffs++;
+					mapB.setLabel(rowIndex, colIndex, mapA.getTile(rowIndex, colIndex).name);
+				}
+			}
+		}
+		//return numDiffs;
+	}
+//JACOB INSERTED
+	/*
 	for (int rowIndex = 0; rowIndex < numRows; rowIndex++) {
 		for (int colIndex = 0; colIndex < numCols; colIndex++) {
 			//cout << mapA.getTile(rowIndex, colIndex).bgCode << " " << mapB.getTile(rowIndex, colIndex).bgCode << endl;
@@ -80,7 +114,10 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 			}
 		}
 	}
-
+	*/
+	
+	
+	//O.writeMap(filename);
 	mapB.writeScenarioMap(filename,secondmap); //mapName is filler
 	//mapB.writeMap(filename);
 	return 0;
@@ -227,7 +264,7 @@ void getDiff_optimized(wesmap & mapA, wesmap & mapB, wesmap & mapOutput)
 			else {
 				colA = 0; colB = 0;
 			}
-			int toCompare = newDiff(mapA, rowA, colA, mapB, rowB, rowB);
+			int toCompare = newDiff(mapA, rowA, colA, mapB, rowB, colB);
 			if (toCompare < bestPosition[0])
 			{
 				bestPosition[0] = toCompare;
@@ -246,25 +283,32 @@ void getDiff_optimized(wesmap & mapA, wesmap & mapB, wesmap & mapOutput)
 	{
 		if (numRowsA < numRowsB)
 		{
+			cout << "mapA.resizeNew(" << bestPosition[1] <<", 0, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);" << endl;
 			mapA.resizeNew(bestPosition[1], 0, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
 			if (numColsA < numColsB)
 			{
+				cout << "mapA.resizeNew(0, " << bestPosition[2] <<", mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);" << endl;
 				mapA.resizeNew(0, bestPosition[2], mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
 			}
 			else
 			{
+				cout << "mapB.resizeNew(0, " << bestPosition[2] <<", mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);" << endl;
 				mapB.resizeNew(0, bestPosition[2], mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
 			}
 		}
 		else
 		{
+			cout << "mapB.resizeNew(" << bestPosition[1] <<", 0, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);" << endl;
 			mapB.resizeNew(bestPosition[1], 0, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
 			if (numColsA < numColsB)
 			{
+				cout << bestPosition[0] << endl;
+				cout << "mapA.resizeNew(0, " << bestPosition[2] <<", mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);" << endl;
 				mapA.resizeNew(0, bestPosition[2], mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
 			}
 			else
 			{
+				cout << "mapB.resizeNew(0," << bestPosition[2] <<", mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);" << endl;
 				mapB.resizeNew(0, bestPosition[2], mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
 			}
 		}
@@ -320,11 +364,11 @@ void getDiff_helper_cols(const wesmap &mapA, const wesmap & mapB, wesmap mapOutp
 int newDiff(const wesmap & mapA, int rowOffA, int colOffA, const wesmap mapB, int rowOffB, int colOffB)
 {
 	int numDiffs = 0;
-	int rowB = rowOffB;
-	for (int rowA = rowOffA; (rowA < mapA.getNumRows()) && (rowB < mapB.getNumRows()); rowA++, rowB++)
+	int rowB = rowOffA;
+	for (int rowA = rowOffB; (rowA < mapA.getNumRows()) && (rowB < mapB.getNumRows()); rowA++, rowB++)
 	{
-		int colB = colOffB;
-		for (int colA = colOffA; (colA < mapA.getNumCols()) && (colB < mapB.getNumCols()); colA++, colB++)
+		int colB = colOffA;
+		for (int colA = colOffB; (colA < mapA.getNumCols()) && (colB < mapB.getNumCols()); colA++, colB++)
 		{
 			if (mapA.getTile(rowA, colA) == mapB.getTile(rowB, colB))
 			{
@@ -336,5 +380,6 @@ int newDiff(const wesmap & mapA, int rowOffA, int colOffA, const wesmap mapB, in
 			}
 		}
 	}
+	if (numDiffs == 0) cout << rowOffA << " " << colOffA << " " << rowOffB << " " << colOffB << endl;
 	return numDiffs;
 }
