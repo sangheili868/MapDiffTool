@@ -2,6 +2,7 @@
 #define MAPDIFF_HPP
 
 #include<string>
+#include "wesmap.hpp"
 
 bool mapdiffer(std::string argument);
 void parseCommas(std::string source, std::string & originalMap,
@@ -10,5 +11,6 @@ int newDiff(const wesmap & mapA, int rowOffA, int colOffA, const wesmap mapB, in
 void getDiff_helper_cols(const wesmap &mapA, const wesmap & mapB, wesmap mapOutput, int rowPassed, int * bestPosition);
 void getDiff(const wesmap & mapA, const wesmap & mapB, wesmap & mapOutput);
 int mapDiff_func(const wesmap & mapA, const wesmap & mapB, wesmap & mapOutput);
+void getDiff_optimized(wesmap & mapA, wesmap & mapB, wesmap & mapOutput);
 
 #endif
