@@ -36,7 +36,7 @@ wesmap::wesmap(const string & filename)
 	}
 	string input = config;
 	string inputLine;
-	vector<westile> tileRow;
+	deque<westile> tileRow;
 	numRows = 0;
 	getline(infile, inputLine);
 	getline(infile, inputLine);
@@ -67,7 +67,7 @@ wesmap::wesmap(const string & filename)
 
 wesmap::wesmap(int rowNum, int colNum, westile myTile)
 {
-	vector<westile> temp;
+	deque<westile> temp;
 	numRows = rowNum;
 	numCols = colNum;
 	for (int i = 0; i < colNum; i++) {
@@ -83,7 +83,7 @@ void wesmap::resize(int newNumRows, int newNumCols, westile newtile) {
 
 	if (newNumRows > numRows)
 	{
-		vector<westile> tempvec;
+		deque<westile> tempvec;
 		for (int i = 0; i<numCols; i++)
 			tempvec.push_back(newtile);
 		for (int j = numRows; j<newNumRows; j++)
@@ -98,66 +98,45 @@ void wesmap::resize(int newNumRows, int newNumCols, westile newtile) {
 		numCols = newNumCols;
 	}
 }
-/*
-void wesmap::resizeNew(int moveRows, int moveCols, int newNumRows, int newNomCols, westile newtile) {
-	if (newNumRows > numRows)
-	{
-		vector<westile> tempvec;
 
-		if (moveRows >= 0){
-			for (int i = 0; i < moveRows; i++){
-				tempvec.push_back(newtile);
-			}
+void wesmap::resizeNew(int moveRows, int moveCols, int newNumRows, int newNumCols, westile newtile) {
+	deque<westile> tempvec;
 
-			if (moveCols >= 0){
-				for (int k = 0; k < moveCols; k++){
-					tiles.push_back(tempvec);
-				}
-			}
-			else{
-				for (int k = 0; k > moveCols; k--){
-					tiles.push_front(tempvec);
-				}
-			}
-		}
-
-		else{
-			for (int i = 0; i > moveRows; i--){
-				tempvec.push_front(newtile);
-			}
-
-			if (moveCols >= 0){
-				for (int k = 0; k < moveCols; k++){
-					tiles.push_back(tempvec);
-				}
-			}
-			else{
-				for (int k = 0; k > moveCols; k--){
-					tiles.push_front(tempvec);
-				}
-			}
-		}
-
-		for (int j = 0; j < numCols; j++){
-			tempvec.push_back(newtile);
-		}
-		
-		for (int l = numRows; l < newNumRows; l++){
-			tiles.push_back(tempvec);
-		}
-		numRows = newNumRows;
+	for (int i = 0; i < newNumCols; i++){            //push void tiles into a row
+		tempvec.push_back(newtile);
 	}
-	/*if (newNumCols > numCols)
-	{
-		for (int i = 0; i<numRows; i++)
-			for (int j = numCols; j<newNumCols; j++)
-				tiles[i].push_back(newtile);
-		numCols = newNumCols;
+
+
+	for (int j = moveRows; j < newNumRows; j++){
+		tiles.push_back(tempvec);
 	}
+
+	while (moveRows > 0){							//push void rows into tiles vector
+		tiles.push_front(tempvec);
+		moveRows--;
+	}
+
+	numRows = newNumRows;
+
+	for (int i = 0; i < numRows; i++){
+		for (int j = 0; j < moveCols; j++){
+			tiles[i].push_front(newtile);
+		}
+	}
+
+	for (int i = 0; i < numRows; i++){
+		for (int j = moveCols; j < newNumCols; j++){
+			tiles[i].push_back(newtile);
+		}
+	}
+
+	numCols = newNumCols;
+
 }
-*/
+
 void wesmap::writeMap(string filename) {
 	ofstream myfile;
+	myfile.open(filename);
 	myfile << "border_size=" << borderSize << endl;
 	myfile << "usage=" << usage << endl << endl;
 
@@ -197,111 +176,110 @@ void wesmap::writeScenarioMap(string filename, string mapFile) {
 	myfile.open(filename);
 
 	myfile << "current_time=0" << endl;
-	myfile << "description=""" << endl;
+	myfile << "description=\"\"" << endl;
 	myfile << "experience_modifier=70" << endl;
-	myfile << "id=" << filename << endl;
-	myfile << "mapdata=\"";
+	myfile << "id=\"" << filename <<"\""<< endl;
+	myfile << "map_data=\"";
 	 
 	ifstream inFile;
 	inFile.open(mapFile);
-	cout << "reading" << endl;
-	while (!inFile.eof()) {
-		inFile >> input;
-	}
+	getline(inFile, input);
 	myfile << input;
-	cout << "done" << endl;
+	while (!inFile.eof()) {
+		myfile << endl;
+		getline(inFile, input);
+		myfile << input;
+	}
 	inFile.close();
 
-	myfile << endl << "\"" << endl;
-	myfile << "name=\"" << filename << "\"";
-	myfile << "random_starting_time = no" << endl;
+	myfile << "\"" << endl;
+	myfile << "name=\"" << filename << "\""<<endl;
+	myfile << "random_starting_time=no" << endl;
 	myfile << "turns=-1" << endl;
 	myfile << "victory_when_enemies_defeated=yes" << endl;
-	myfile << "\[time\]\
-		blue = 0\
-		green = -20\
-		id = \"dawn\"\
-		image = \"misc/time-schedules/default/schedule-dawn.png\"\
-		lawful_bonus = 0\
-		mask = \"\"\
-		#textdomain wesnoth - help\
-		name = _\"Dawn\"\
-		red = -20\
-		sound = \"ambient/morning.ogg\"\
-		[\/ time]\
-	[time]\
-	blue = 0\
-		green = 0\
-		id = \"morning\"\
-		image = \"misc/time-schedules/default/schedule-morning.png\"\
-		lawful_bonus = 25\
-		mask = \"\"\
-		name = _\"Morning\"\
-		red = 0\
-		sound = \"\"\
-		[/ time]\
-	[time]\
-	blue = 0\
-		green = 0\
-		id = \"afternoon\"\
-		image = \"misc/time-schedules/default/schedule-afternoon.png\"\
-		lawful_bonus = 25\
-		mask = \"\"\
-		name = _\"Afternoon\"\
-		red = 0\
-		sound = \"\"\
-		[/ time]\
-	[time]\
-	blue = -20\
-		green = -20\
-		id = \"dusk\"\
-		image = \"misc/time-schedules/default/schedule-dusk.png\"\
-		lawful_bonus = 0\
-		mask = \"\"\
-		name = _\"Dusk\"\
-		red = 0\
-		sound = \"ambient/night.ogg\"\
-		[/ time]\
-	[time]\
-	blue = -10\
-		green = -35\
-		id = \"first_watch\"\
-		image = \"misc/time-schedules/default/schedule-firstwatch.png\"\
-		lawful_bonus = -25\
-		mask = \"\"\
-		name = _\"First Watch\"\
-		red = -45\
-		sound = \"\"\
-		[/ time]\
-	[time]\
-	blue = -10\
-		green = -35\
-		id = \"second_watch\"\
-		image = \"misc/time-schedules/default/schedule-secondwatch.png\"\
-		lawful_bonus = -25\
-		mask = \"\"\
-		name = _\"Second Watch\"\
-		red = -45\
-		sound = \"\"\
-		[/ time]\
-		" << endl;
+	myfile << "[time] " << endl <<
+		"\tblue=0" << endl <<
+		"\tgreen=-20" << endl <<
+		"\tid=\"dawn\"" << endl <<
+		"\timage=\"misc/time-schedules/default/schedule-dawn.png\"" << endl <<
+		"\tlawful_bonus=0" << endl <<
+		"\tmask=\"\"" << endl <<
+		"#textdomain wesnoth - help" << endl <<
+		"\tname=_\"Dawn\"" << endl <<
+		"\tred=-20" << endl <<
+		"\tsound=\"ambient/morning.ogg\"" << endl <<
+		"[/time]" << endl <<
+		"[time]" << endl <<
+		"\tblue=0" << endl <<
+		"\tgreen=0" << endl <<
+		"\tid=\"morning\"" << endl <<
+		"\timage=\"misc/time-schedules/default/schedule-morning.png\"" << endl <<
+		"\tlawful_bonus=25" << endl <<
+		"\tmask=\"\"" << endl <<
+		"\tname=_\"Morning\"" << endl <<
+		"\tred=0" << endl <<
+		"\tsound=\"\"" << endl <<
+		"[/time]" << endl <<
+		"[time]" << endl <<
+		"\tblue=0" << endl <<
+		"\tgreen=0" << endl <<
+		"\tid=\"afternoon\"" << endl <<
+		"\timage=\"misc/time-schedules/default/schedule-afternoon.png\"" << endl <<
+		"\tlawful_bonus=25" << endl <<
+		"\tmask=\"\"" << endl <<
+		"\tname=_\"Afternoon\"" << endl <<
+		"\tred=0" << endl <<
+		"\tsound=\"\"" << endl <<
+		"[/time]" << endl <<
+		"[time]" << endl <<
+		"\tblue=-20" << endl <<
+		"\tgreen=-20" << endl <<
+		"\tid=\"dusk\"" << endl <<
+		"\timage=\"misc/time-schedules/default/schedule-dusk.png\"" << endl <<
+		"\tlawful_bonus=0" << endl <<
+		"\tmask=\"\"" << endl <<
+		"\tname=_\"Dusk\"" << endl <<
+		"\tred=0" << endl <<
+		"\tsound=\"ambient/night.ogg\"" << endl <<
+		"[/time]" << endl <<
+		"[time]" << endl <<
+		"\tblue=-10" << endl <<
+		"\tgreen=-35" << endl <<
+		"\tid=\"first_watch\"" << endl <<
+		"\timage=\"misc/time-schedules/default/schedule-firstwatch.png\"" << endl <<
+		"\tlawful_bonus=-25" << endl <<
+		"\tmask=\"\"" << endl <<
+		"\tname=_\"First Watch\"" << endl <<
+		"\tred=-45" << endl <<
+		"\tsound=\"\"" << endl <<
+		"[/time]" << endl <<
+		"[time]" << endl <<
+		"\tblue=-10" << endl <<
+		"\tgreen=-35" << endl <<
+		"\tid=\"second_watch\"" << endl <<
+		"\timage=\"misc/time-schedules/default/schedule-secondwatch.png\"" << endl <<
+		"\tlawful_bonus=-25" << endl <<
+		"\tmask=\"\"" << endl <<
+		"\tname=_\"Second Watch\"" << endl <<
+		"\tred=-45" << endl <<
+		"\tsound=\"\"" << endl <<
+		"[/time]" << endl;
 
-	cout << "writing labels" << endl;
+
 	for (auto iter = changedtiles.begin(); iter != changedtiles.end(); ++iter) {
 		for (auto iter2 = changedtiles.at(iter->first).begin(); iter2 != changedtiles.at(iter->first).end(); ++iter2) {
 			myfile << "[label]" << endl;
-			myfile << "/tcolor=\"221, 221, 221,0\"" << endl;
-			myfile << "/timmutable=yes" << endl;
-			myfile << "/tteam_name=\"\"" << endl;
-			myfile << "/ttext=\"" << (iter2->second) << "\"" << endl;
-			myfile << "/tvisible_in_fog=yes" << endl;
-			myfile << "/tvisible_in_shroud=no" << endl;
-			myfile << "/tx=" << (iter->first) << endl;
-			myfile << "/ty=" << (iter2->first) << endl;
+			myfile << "\tcolor=\"221,221,221,0\"" << endl;
+			myfile << "\timmutable=yes" << endl;
+			myfile << "\tteam_name=\"\"" << endl;
+			myfile << "\ttext=\"" << (iter2->second) << "\"" << endl;
+			myfile << "\tvisible_in_fog=yes" << endl;
+			myfile << "\tvisible_in_shroud=no" << endl;
+			myfile << "\tx=" << (iter->first) << endl;
+			myfile << "\ty=" << (iter2->first) << endl;
 			myfile << "[/label]" << endl;
 		}
 	}
-	cout << "reading" << endl;
 	myfile.close();
 
 }
