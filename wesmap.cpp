@@ -100,60 +100,38 @@ void wesmap::resize(int newNumRows, int newNumCols, westile newtile) {
 }
 
 void wesmap::resizeNew(int moveRows, int moveCols, int newNumRows, int newNumCols, westile newtile) {
-	if (newNumRows > numRows)
-	{
-		deque<westile> tempvec;
+	deque<westile> tempvec;
 
-		if (moveRows >= 0){
-			for (int i = 0; i < moveRows; i++){
-				tempvec.push_back(newtile);
-			}
-
-			if (moveCols >= 0){
-				for (int k = 0; k < moveCols; k++){
-					tiles.push_back(tempvec);
-				}
-			}
-			else{
-				for (int k = 0; k > moveCols; k--){
-					tiles.push_front(tempvec);
-				}
-			}
-		}
-
-		else{
-			for (int i = 0; i > moveRows; i--){
-				tempvec.push_front(newtile);
-			}
-
-			if (moveCols >= 0){
-				for (int k = 0; k < moveCols; k++){
-					tiles.push_back(tempvec);
-				}
-			}
-			else{
-				for (int k = 0; k > moveCols; k--){
-					tiles.push_front(tempvec);
-				}
-			}
-		}
-
-		for (int j = 0; j < numCols; j++){
-			tempvec.push_back(newtile);
-		}
-		
-		for (int l = numRows; l < newNumRows; l++){
-			tiles.push_back(tempvec);
-		}
-		numRows = newNumRows;
+	for (int i = 0; i < newNumCols; i++){            //push void tiles into a row
+		tempvec.push_back(newtile);
 	}
-	if (newNumCols > numCols)
-	{
-		for (int i = 0; i<numRows; i++)
-			for (int j = numCols; j<newNumCols; j++)
-				tiles[i].push_back(newtile);
-		numCols = newNumCols;
+
+
+	for (int j = moveRows; j < newNumRows; j++){
+		tiles.push_back(tempvec);
 	}
+
+	while (moveRows > 0){							//push void rows into tiles vector
+		tiles.push_front(tempvec);
+		moveRows--;
+	}
+
+	numRows = newNumRows;
+
+	for (int i = 0; i < numRows; i++){
+		for (int j = 0; j < moveCols; j++){
+			tiles[i].push_front(newtile);
+		}
+	}
+
+	for (int i = 0; i < numRows; i++){
+		for (int j = moveCols; j < newNumCols; j++){
+			tiles[i].push_back(newtile);
+		}
+	}
+
+	numCols = newNumCols;
+
 }
 
 void wesmap::writeMap(string filename) {
