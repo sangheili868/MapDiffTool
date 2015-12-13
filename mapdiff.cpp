@@ -99,3 +99,159 @@ void parseCommas(std::string input, std::string & originalMap,
 		//error checking goes here, too many arguments
 	}
 }
+//All three maps MUST be the same size.
+//returns number of differences.
+//writes to output map.
+int mapDiff(const wesmap & mapA, const wesmap & mapB, wesmap & mapOutput)
+{
+	westile voidTile("Xv");
+	int numDiffs = 0;
+	for (int rowIndex = 0; rowIndex < mapA.getNumRows(); rowIndex++) {
+		for (int colIndex = 0; colIndex < mapA.getNumCols(); colIndex++) {
+			//cout << mapA.getTile(rowIndex, colIndex).bgCode << " " << mapB.getTile(rowIndex, colIndex).bgCode << endl;
+			if (mapA.getTile(rowIndex, colIndex) == mapB.getTile(rowIndex, colIndex)){
+				mapOutput.setTile(rowIndex, colIndex, voidTile);
+			}
+			else {
+				//cout << "Difference Found" << endl;
+				mapOutput.setTile(rowIndex, colIndex, mapB.getTile(rowIndex, colIndex));
+				numDiffs++;
+			}
+		}
+	}
+	return numDiffs;
+}
+
+//Maps need not be the same size.
+//mapOutput must have as many rows as max(rows in A, rows in B)
+//and as many columns as max(cols in A, cols in b)
+void getDiff(const wesmap & mapA, const wesmap & mapB, wesmap & mapOutput)
+{
+	wesmap tempA = mapA;
+	wesmap tempB = mapB;
+	westile voidTile("Xv");
+	int rowNow = 0, colNow = 0;
+	int bestPosition[3] = { 2000000000, 0, 0 };
+	int toCompare = 0;
+	int rowsA, rowsB, colsA, colsB;
+	rowsA = mapA.getNumRows(); rowsB = mapB.getNumRows();
+	colsA = mapA.getNumCols(); rowsB = mapB.getNumCols();
+
+	if (rowsA != rowsB)
+	{
+		if (rowsA < rowsB)
+		{
+			for (int rowNow = 0; rowNow < rowsB - rowsA; rowNow++)
+			{
+				tempA = mapA;
+				tempA.resizeNew(rowNow, colNow, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
+				getDiff_helper_cols(tempA, mapB, mapOutput, rowNow, bestPosition);
+			}
+		}
+		else
+		{
+			for (int rowNow = 0; rowNow < rowsA - rowsB; rowNow++)
+			{
+				tempB = mapB;
+				tempB.resizeNew(rowNow, colNow, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
+				getDiff_helper_cols(mapA, tempB, mapOutput, rowNow, bestPosition);
+			}
+		}
+	}
+	tempA = mapA;
+	tempB = mapB;
+	//found best resize, now do it.
+	if (rowsA != rowsB)
+	{
+		if (rowsA < rowsB)
+		{
+			tempA.resizeNew(bestPosition[1], 0, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
+			if (colsA < colsB)
+			{
+				tempA.resizeNew(0, bestPosition[2], mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
+			}
+			else
+			{
+				tempB.resizeNew(0, bestPosition[2], mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
+			}
+		}
+		else
+		{
+			tempB.resizeNew(bestPosition[1], 0, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
+			if (colsA < colsB)
+			{
+				tempA.resizeNew(0, bestPosition[2], mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
+			}
+			else
+			{
+				tempB.resizeNew(0, bestPosition[2], mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
+			}
+		}
+	}
+	mapDiff(mapA, mapB, mapOutput);
+}
+
+void getDiff_helper_cols(const wesmap &mapA, const wesmap & mapB, wesmap mapOutput, int rowPassed, int * bestPosition)
+{
+	westile voidTile("Xv");
+	wesmap tempA = mapA;
+	wesmap tempB = mapB;
+	int toCompare = 0;
+	int rowsA, rowsB, colsA, colsB;
+	rowsA = mapA.getNumRows(); rowsB = mapB.getNumRows();
+	colsA = mapA.getNumCols(); rowsB = mapB.getNumCols();
+
+	if (rowsA != colsB)
+	{
+		if (colsA < colsB)
+		{
+			for (int colNow = 0; colNow < colsB - colsA; colNow++)
+			{
+				tempA = mapA;
+				tempA.resizeNew(rowPassed, colNow, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
+				toCompare = mapDiff(tempA, tempB, mapOutput);
+				if (toCompare < bestPosition[0])
+				{
+					bestPosition[0] = toCompare;
+					bestPosition[1] = rowPassed;
+					bestPosition[2] = colNow;
+				}
+			}
+		}
+		else
+		{
+			for (int colNow = 0; colNow < colsA - colsB; colNow++)
+			{
+				tempB = mapB;
+				tempB.resizeNew(rowPassed, colNow, mapOutput.getNumRows(), mapOutput.getNumCols(), voidTile);
+				toCompare = mapDiff(tempA, tempB, mapOutput);
+				if (toCompare < bestPosition[0])
+				{
+					bestPosition[0] = toCompare;
+					bestPosition[1] = rowPassed;
+					bestPosition[2] = colNow;
+				}
+			}
+		}
+	}
+}
+
+int newDiff(const wesmap & mapA, int rowOffA, int colOffA, const wesmap mapB, int rowOffB, int colOffB)
+{
+	int numDiffs = 0;
+	for (int rowA = rowOffA, int rowB = rowOffB; rowA < mapA.getNumRows(), rowB < mapB.getNumRows(); rowA++, rowB++)
+	{
+		for (int colA = colOffA, int colB = colOffB; colA < mapA.getNumCols(), colB < mapB.getNumCols(); colA++, colB++)
+		{
+			if (mapA.getTile(rowA, colA) == mapB.getTile(rowB, colB))
+			{
+				//match!
+			}
+			else
+			{
+				numDiffs++;
+			}
+		}
+	}
+	return numDiffs;
+}
