@@ -180,7 +180,22 @@ void wesmap::writeScenarioMap(string filename, string mapFile) {
 	myfile << "experience_modifier=70" << endl;
 	myfile << "id=\"" << filename <<"\""<< endl;
 	myfile << "map_data=\"";
-	 
+
+
+	myfile << "border_size=" << borderSize << endl;
+	myfile << "usage=" << usage << endl << endl;
+
+	for (int row = 0; row < numRows; row++) {
+		for (int col = 0; col < numCols; col++) {
+			myfile << tiles[row][col].bgCode;
+			if (tiles[row][col].fgCode != "XXXX")  myfile << "^" << tiles[row][col].fgCode;
+			if (col != numCols - 1) myfile << '\t' << ", ";
+		}
+		myfile << endl;
+	}
+
+
+	/*
 	ifstream inFile;
 	inFile.open(mapFile);
 	getline(inFile, input);
@@ -191,7 +206,7 @@ void wesmap::writeScenarioMap(string filename, string mapFile) {
 		myfile << input;
 	}
 	inFile.close();
-
+	*/
 	myfile << "\"" << endl;
 	myfile << "name=\"" << filename << "\""<<endl;
 	myfile << "random_starting_time=no" << endl;
