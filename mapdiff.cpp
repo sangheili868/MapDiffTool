@@ -72,7 +72,7 @@ int main(int argc, char* argv[])//mapdiffer(string argument)
 			else {
 				//cout << "Difference Found" << endl;
 				//O.setTile(rowIndex, colIndex, mapB.getTile(rowIndex, colIndex));
-				mapB.setLabel(rowIndex, colIndex, mapB.getTile(rowIndex, colIndex).name);
+				mapB.setLabel(rowIndex, colIndex, mapA.getTile(rowIndex, colIndex).name);
 			}
 		}
 	}
